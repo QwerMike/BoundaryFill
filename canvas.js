@@ -160,16 +160,22 @@ class Draw {
 	static bline(p0, p1, ctx) { 
 		let dx = Math.abs(p1.x - p0.x), sx = p0.x < p1.x ? 1 : -1;
 		let dy = Math.abs(p1.y - p0.y), sy = p0.y < p1.y ? 1 : -1; 
-		let err = (dx > dy ? dx : -dy) / 2, e2;
+		let err = (dx > dy ? dx : -dy) / 2;
 		let p = new Point(p0.x, p0.y);
-		
-		while (true) {
-			console.log(p.x, p.y);
-			Draw.point(p, ctx);
-			if (p.x === p1.x && p.y === p1.y) break;
-			e2 = err;
-			if (e2 > -dx) { err -= dy; p.x += sx; }
-			if (e2 < dy) { err += dx; p.y += sy; }
+		if (dy <= dx) {
+			for (p.x = p0.x; p.x != p1.x; p.x+=sx) {
+				console.log(p.x, p.y);
+				Draw.point(p, ctx);
+				if (err < dy) { err += dx; p.y += sy; }
+				err -= dy;
+			}
+		} else {
+			for (p.y = p0.y; p.y != p1.y; p.y+=sy) {
+				console.log(p.x, p.y);
+				Draw.point(p, ctx);
+				if (err > -dx) { err -= dy; p.x += sx; }
+				err += dx;
+			}
 		}
 	}
 } // class Draw
